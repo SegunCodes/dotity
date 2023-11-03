@@ -64,11 +64,16 @@ namespace dotity.Controllers
             returnurl ??= Url.Content("~/");
             if (ModelState.IsValid)
             {
-                var result = await _signInManager.PasswordSignInAsync(model.Email, model.Password,model.RememberMe,lockoutOnFailure:false);
+                var result = await _signInManager.PasswordSignInAsync(model.Email, model.Password,model.RememberMe,lockoutOnFailure:true);
                 if (result.Succeeded)
                 {
                     return LocalRedirect(returnurl);
-                }else
+                }
+                if (result.IsLockedOut)
+                {
+                    return View("Lockout");
+                }
+                else
                 {
                     ModelState.AddModelError(string.Empty, "Invalid login attempt");
                     return View(model);
