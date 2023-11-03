@@ -82,12 +82,18 @@ namespace dotity.Controllers
             return View(model);
         }
 
-        private void AddErrors(IdentityResult result)
+         [HttpGet]
+        public IActionResult ForgotPassword ()
         {
-            foreach (var error in result.Errors)
-            {
-                ModelState.AddModelError(string.Empty, error.Description);
-            }
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ForgotPassword (ForgotPasswordViewModel model)
+        {
+            
+            return View(model);
         }
 
         [HttpPost]
@@ -96,6 +102,14 @@ namespace dotity.Controllers
         {
             await _signInManager.SignOutAsync();
             return RedirectToAction(nameof(HomeController.Index), "Home");
+        }
+        
+        private void AddErrors(IdentityResult result)
+        {
+            foreach (var error in result.Errors)
+            {
+                ModelState.AddModelError(string.Empty, error.Description);
+            }
         }
     }
 }
